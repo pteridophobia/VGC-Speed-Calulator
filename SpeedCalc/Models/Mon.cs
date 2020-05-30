@@ -8,9 +8,11 @@ namespace SpeedCalc.Models
     public class Mon
     {
         public int ID;
-        public int DexNum;
-        public string Name;
-        public Stats BaseStats;
+        public int dexNum;
+        public string name;
+        public string ability;
+        public Stats baseStats;
+
 
 
     }

@@ -9,12 +9,14 @@ namespace SpeedCalc.Models
     {
         public Mon mon;
 
+        public int level;
         public Natures nature;
         public Types type1;
         public Types type2;
         public Stats EVs;
         public Stats IVs;
-        public Stats Modifiers;
+        public Stats modifiers;
+        public string heldItem;
 
     }
 }

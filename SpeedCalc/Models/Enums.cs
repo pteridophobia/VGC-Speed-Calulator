@@ -55,4 +55,22 @@ namespace SpeedCalc.Models
         Serious,
         Timid
     }
+
+    public enum Weathers
+    {
+        Rain,
+        Sun,
+        Sand,
+        Hail,
+        Clear
+    }
+
+    public enum Terrains
+    {
+        Misty,
+        Grassy,
+        Electric,
+        Psychic,
+        None
+    }
 }
