@@ -13,12 +13,6 @@ namespace SpeedCalc.Models
         public int SpAttack;
         public int SpDefense;
         public int Speed;
-
-        public Stats copmuteStatValues(Stats bse, Stats evs, Stats ivs, Stats mods/*TOADD: board state*/)
-        {
-            //TODO: implement calculations of stats
-            return bse;
-        }
     }
 
 }

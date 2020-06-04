@@ -73,4 +73,11 @@ namespace SpeedCalc.Models
         Psychic,
         None
     }
+
+    public enum MoveTypes
+    {
+        Physical,
+        Special,
+        Status
+    }
 }
