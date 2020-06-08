@@ -1,8 +1,10 @@
 from bs4 import BeautifulSoup
 import requests
 
-rillatest = requests.get('https://serebii.net/pokedex-swsh/rillaboom/', auth=('user', 'pass'))
+rillatest = requests.get('https://www.serebii.net/pokedex-swsh/', auth=('user', 'pass'))
 
 soup = BeautifulSoup(rillatest.text, features="html.parser")
 #print(r.text)
 print(soup.title)
+print(soup.find("select"))
+#print(soup)
