@@ -26,7 +26,7 @@ for j in list1:
     #print(j)
 
 
-
+"""
 rillatest2 = requests.get('https://www.serebii.net/pokedex-sm/', auth=('user', 'pass'))
 soup2 = BeautifulSoup(rillatest2.text, features="html.parser")
 list2 = []
@@ -70,19 +70,40 @@ for name in names:
         name = name[1:]
         names.append(name)
 
-
+"""
 names2 = []
 for name in names:
     if name not in names2:
-        names2.append(name)
-        print(name)
         n += 1
-print( n , " names")
+        if (n != 101 and n > 2 and n != 468 and n != 363 and n != 248 and n != 199 and n != 149):
+            if (n < 556):
+                names2.append(name)
+                #print(name, " ", n)
+        
+mons = 0
+s = ""
+for mon in names2:
+    mons+=1
+    print mon
+    s = mon
+print mon
+url_ = "https://www.serebii.net/pokedex-swsh/" + s + "/"
+print url_ 
+print( mons , " mons")
     #print("ENDDDD\n")
     #print(i[28:i.find("/")])
     #n += 1
 print(n)
 
+rillatest2 = requests.get(url_, auth=('user', 'pass'))
+
+soup = BeautifulSoup(rillatest2.text, features="html.parser")
+#print(r.text)
+print(soup.title)
+list1 = []
+list1 = (soup.findAll())
+print soup
+#print list1
 t = " aa"
 if (t[0] == " "):
     print(t[1:])
