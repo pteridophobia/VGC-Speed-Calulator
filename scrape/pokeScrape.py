@@ -1,6 +1,13 @@
 from bs4 import BeautifulSoup
 import requests
 import unicodedata
+import csv
+
+
+file = open('SpeedDex.csv', 'w', newline ='')
+
+
+
 
 rillatest = requests.get('https://www.serebii.net/pokedex-swsh/', auth=('user', 'pass'))
 
@@ -75,87 +82,79 @@ names2 = []
 for name in names:
     if name not in names2:
         n += 1
-        if (n != 101 and n > 2 and n != 468 and n != 363 and n != 248 and n != 199 and n != 149):
+        if (n != 101 and n > 2 and n != 468 and n != 363 and n != 248 and n != 199 and n != 149 and n != 809):
             if (n < 556):
                 names2.append(name)
                 #print(name, " ", n)
         
 mons = 0
 s = ""
-for mon in names2:
-    mons+=1
-    print(mon)
-    s = mon
-print (s)
-url_ = "https://www.serebii.net/pokedex-swsh/" + s + "/"
-url_ = "https://www.serebii.net/pokedex-swsh/" + "dreepy" + "/"
-print (url_) 
-print( mons , " mons")
-    #print("ENDDDD\n")
-    #print(i[28:i.find("/")])
-    #n += 1
-print(n)
+with file:
+    header = ['Name', 'Type', 'Nat Dex Num', 'Galar Dex Num', 'Armor Dex Num', 'Abilities', 'Stats']
+    writer = csv.DictWriter(file, fieldnames = header) 
+    writer.writeheader() 
+    for mon in names2:
 
-rillatest2 = requests.get(url_, auth=('user', 'pass'))
+        mons+=1
+        s = mon
+        url_ = "https://www.serebii.net/pokedex-swsh/" + s + "/"
+        rillatest2 = requests.get(url_, auth=('user', 'pass'))
+        types = []
+        soup = BeautifulSoup(rillatest2.text, features="html.parser")
+        list1 = []
+        list1 = (soup.findAll("a"))
+        for a in list1:
+            #print(type(a))
+            if str(a).find("class=\"typeimg\"") > -1:
+                if len(types) < 2:
+                    types.append(str(a)[23:str(a).find(".shtml")])
+        list2 = []
+        list2 = (soup.findAll("td"))
+        #find dex nums
+        natD = "---"
+        GalarD = "---"
+        ArmorD = "---"
+        for td in list2:
+            #print(td.encode("utf-8"))
+            if (str(td).find("<tr><td><b>Galar</b>:")) > -1:
+                natD = str(td)[str(td).find("#")+1:str(td).find("#") + 4] # National
+                GalarD = str(td)[str(td).find("#", str(td).find("#")+1)+1:str(td).find("#", str(td).find("#")+1) + 4]
+                #Isle of armor 
+                ArmorD = str(td)[str(td).find("#", str(td).find("Isle of Armor"))+1:str(td).find("#", str(td).find("Isle of Armor"))+4]
+            
+        #find abilites
+        abilites = []
+        list3 = []
+        list3 = (soup.findAll("a"))
+        for a in list3:
+            if str(a).find("/abilitydex/") > -1:
+                if str(a).find("<b>") > -1:
+                    #print(str(a)[str(a).find("<b>") +3: str(a).find("</b>")])
+                    if str(a)[str(a).find("<b>") +3: str(a).find("</b>")] not in abilites:
+                        abilites.append(str(a)[str(a).find("<b>") +3: str(a).find("</b>")])
 
-soup = BeautifulSoup(rillatest2.text, features="html.parser")
-#print(r.text)
-print(soup.title)
-list1 = []
-list1 = (soup.findAll("a"))
-#print(soup.encode("utf-8"))
-#find type
-for a in list1:
-    #print(type(a))
-    if str(a).find("class=\"typeimg\"") > -1:
-        print(a)
-        print(str(a)[23:str(a).find(".shtml")])
 
-list2 = []
-list2 = (soup.findAll("td"))
-#find dex nums
-for td in list2:
-    #print(td.encode("utf-8"))
-    if (str(td).find("<tr><td><b>Galar</b>:")) > -1:
-        print("start")
-        print(str(td)[str(td).find("#")+1:str(td).find("#") + 4]) # National
-        print("end")
-        #print(td)
-        #Galar
-        print(str(td)[str(td).find("#", str(td).find("#")+1)+1:str(td).find("#", str(td).find("#")+1) + 4]) 
-        print("last")
-        #Isle of armor 
-        print(str(td)[str(td).find("#", str(td).find("Isle of Armor"))+1:str(td).find("#", str(td).find("Isle of Armor"))+4])
-    
-#find abilites
-abilites = []
-list3 = []
-list3 = (soup.findAll("a"))
-for a in list3:
-    if str(a).find("/abilitydex/") > -1:
-        if str(a).find("<b>") > -1:
-            #print(str(a)[str(a).find("<b>") +3: str(a).find("</b>")])
-            if str(a)[str(a).find("<b>") +3: str(a).find("</b>")] not in abilites:
-                abilites.append(str(a)[str(a).find("<b>") +3: str(a).find("</b>")])
-for ab in abilites:
-    print(ab)
-
-#find stats
-stats = []
-list4 = []
-list4 = (soup.findAll("td"))
-stat = 0
-for td in list4:
-    if str(td).find("Base Stats - Total:") > -1:
-        stat = 1
-    if stat > 0:
-        stats.append(str(td)[str(td).find(">")+1:str(td).find("</")])
-        stat += 1
-    if stat == 8:
+        #find stats
+        stats = []
+        list4 = []
+        list4 = (soup.findAll("td"))
         stat = 0
+        for td in list4:
+            if str(td).find("Base Stats - Total:") > -1:
+                stat = 1
+            if stat > 0:
+                stats.append(str(td)[str(td).find(">")+1:str(td).find("</")])
+                stat += 1
+            if stat == 8:
+                stat = 0
+        writer.writerow({'Name' : mon, 
+                        'Type' : types,
+                        'Nat Dex Num' : natD,
+                        'Galar Dex Num' : GalarD,
+                        'Armor Dex Num' : ArmorD,
+                        'Abilities' : abilites,
+                        'Stats' : stats})
 
-for s in stats:
-    print(s)
     
 
         
